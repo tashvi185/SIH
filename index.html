@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Token System - Digital Queue Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #e0f2fe;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #e0f2fe;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #0ca678;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Features Section */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            background-color: #dbeafe;
+            color: var(--primary);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background-color: var(--light);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--primary);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+            border: 5px solid var(--light);
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: var(--gray);
+            padding: 0 1rem;
+        }
+
+        /* Demo Section */
+        .demo {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .demo h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo p {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .demo-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: var(--dark);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .token-machine {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .token-screen {
+            background-color: #1e293b;
+            color: #10b981;
+            padding: 1.5rem;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .token-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .queue-status {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .queue-item {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 5px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .queue-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Applications Section */
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .application-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .application-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .app-icon {
+            height: 120px;
+            background-color: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .app-content {
+            padding: 1.5rem;
+        }
+
+        .app-content h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .app-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .step-number {
+                margin-bottom: 1rem;
+            }
+
+            .token-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>TokenSystem</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#applications">Applications</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Revolutionizing Queue Management with Digital Tokens</h1>
+                <p>The Online Token System is a fully digital solution that makes service access efficient, secure, and user-friendly across hospitals, banks, and government offices.</p>
+                <a href="#how-it-works" class="btn">How It Works</a>
+                <a href="#demo" class="btn btn-outline">Live Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Key Features</h2>
+                <p>Our system offers a comprehensive set of features designed to optimize service delivery and enhance user experience.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Online Booking</h3>
+                    <p>Book appointments and receive digital tokens from anywhere using our mobile-friendly platform.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Integration</h3>
+                    <p>Integration with Digilocker ensures secure access to verified data with advanced encryption.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <h3>Vending Machine Interface</h3>
+                    <p>Print prescriptions or documents instantly using token numbers at self-service kiosks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Real-time Queue Tracking</h3>
+                    <p>Monitor your position in the queue remotely and receive notifications before your turn.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Doctor Selection</h3>
+                    <p>Choose your preferred healthcare provider or service professional during booking.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Multi-sector Application</h3>
+                    <p>Flexible framework applicable to healthcare, banking, government services, and more.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Simple, efficient process from booking to service delivery</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Book Online</h3>
+                    <p>Select service, provider, and time slot through our platform or mobile app.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Receive Token</h3>
+                    <p>Get a unique digital token with estimated service time and queue position.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your token status in real-time and receive alerts before your turn.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Get Service</h3>
+                    <p>Present your token at the counter or kiosk for quick, efficient service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="section demo" id="demo">
+        <div class="container">
+            <div class="demo-content">
+                <h2>Experience Our Token System</h2>
+                <p>Try our interactive demo to see how the Online Token System works in practice.</p>
+                
+                <div class="demo-container">
+                    <div class="token-machine">
+                        <div class="token-screen" id="tokenScreen">
+                            Welcome! Select a service
+                        </div>
+                        <div class="token-buttons">
+                            <button class="btn" onclick="generateToken('Doctor Consultation')">Doctor Consultation</button>
+                            <button class="btn" onclick="generateToken('Prescription Pickup')">Prescription Pickup</button>
+                            <button class="btn" onclick="generateToken('Lab Report')">Lab Report</button>
+                        </div>
+                    </div>
+                    
+                    <div class="queue-status">
+                        <div class="queue-item">Token #101<br>Waiting</div>
+                        <div class="queue-item active">Token #102<br>Currently Serving</div>
+                        <div class="queue-item">Token #103<br>Estimated 5 min</div>
+                        <div class="queue-item">Token #104<br>Estimated 10 min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications Section -->
+    <section class="section" id="applications">
+        <div class="container">
+            <div class="section-title">
+                <h2>Multi-Sector Applications</h2>
+                <p>Our flexible system can be adapted to various service environments</p>
+            </div>
+            <div class="applications-grid">
+                <div class="application-card">
+                    <div class="app-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="app-content">
+                        <h3>Healthcare</h3>
+                        <p>Reduce waiting times, manage patient flow, and streamline prescription services in hospitals and clinics.</p>
+                    </div>
+                </div>
+                <div class="application-card">
+                    <div class="app-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="app-content">
+                        <h3>Banking</h3>
+                        <p>Optimize customer service in banks with digital queuing and appointment systems.</p>
+                    </div>
+                </div>
+                <div class="application-card">
+                    <div class="app-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div class="app-content">
+                        <h3>Government Offices</h3>
+                        <p>Improve efficiency in public service centers with organized digital queue management.</p>
+                    </div>
+                </div>
+                <div class="application-card">
+                    <div class="app-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="app-content">
+                        <h3>Retail & Services</h3>
+                        <p>Enhance customer experience in retail stores, service centers, and other businesses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>TokenSystem</h3>
+                    <p>Revolutionizing service delivery through digital token-based queue management systems.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#applications">Applications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Healthcare Solutions</a></li>
+                        <li><a href="#">Banking Systems</a></li>
+                        <li><a href="#">Government Services</a></li>
+                        <li><a href="#">Custom Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Business District, City</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@tokensystem.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Online Token System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show');
+        });
+
+        // Token generation demo
+        function generateToken(service) {
+            const tokenNumber = Math.floor(Math.random() * 900) + 100;
+            const screen = document.getElementById('tokenScreen');
+            screen.innerHTML = `Service: ${service}<br>Token: #${tokenNumber}<br>Queue Position: ${Math.floor(Math.random() * 10) + 1}`;
+            
+            // Simulate queue update
+            setTimeout(() => {
+                alert(`Your token #${tokenNumber} is now active. Estimated wait time: ${Math.floor(Math.random() * 15) + 5} minutes.`);
+            }, 1000);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
