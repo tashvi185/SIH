@@ -3,698 +3,1260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Token System - Digital Queue Management</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Digital Healthcare Portal - Government of India</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #10b981;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --danger: #ef4444;
         }
 
         body {
-            background-color: #f1f5f9;
-            color: var(--dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background: #f8faff;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* Header Styles */
+        /* Government Header */
+        .gov-header {
+            background: linear-gradient(90deg, #ff9933 33.33%, #ffffff 33.33% 66.66%, #138808 66.66%);
+            padding: 8px 0;
+            border-bottom: 4px solid #000080;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gov-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+
+        .gov-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000080;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .emblem {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        .emblem-icon {
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #000080 30%, #ff9933 60%, #138808 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .gov-title {
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .time-display {
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            animation: fadeInRight 1s ease-out 0.4s both;
+        }
+
+        /* Main Header */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #000080, #1a237e);
             color: white;
             padding: 1rem 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
         }
 
-        .header-content {
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
+            transition: transform 0.3s ease;
         }
 
-        .logo i {
-            font-size: 2rem;
+        .logo:hover {
+            transform: scale(1.05);
         }
 
-        nav ul {
+        .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 0;
         }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
+        .nav-links li {
             position: relative;
         }
 
-        nav a:hover {
-            color: #e0f2fe;
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            padding: 15px 25px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        nav a::after {
+        .nav-links a::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #e0f2fe;
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover::after {
+            top: 0;
+            left: -100%;
             width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, rgba(0,0,128,0.9), rgba(26,35,126,0.9)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
             color: white;
-            padding: 5rem 0;
+            padding: 120px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><circle cx="200" cy="150" r="3" fill="%23ffffff" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/></circle><circle cx="800" cy="100" r="2" fill="%23ffffff" opacity="0.4"><animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite"/></circle><circle cx="1000" cy="300" r="4" fill="%23ffffff" opacity="0.5"><animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite"/></circle></svg>');
         }
 
         .hero-content {
-            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
             margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffffff, #e3f2fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            padding: 18px 35px;
             border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn:hover {
-            background-color: #0ca678;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid white;
-            margin-left: 1rem;
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
-        .btn-outline:hover {
-            background-color: white;
-            color: var(--primary);
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #ff8f50);
+            color: white;
+            box-shadow: 0 8px 25px rgba(255,107,53,0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,107,53,0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,255,255,0.2);
         }
 
         /* Features Section */
-        .section {
-            padding: 5rem 0;
+        .features {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f2ff 100%);
+            position: relative;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 3rem;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: #000080;
+            font-weight: 700;
+            position: relative;
         }
 
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .section-title p {
-            color: var(--gray);
-            max-width: 600px;
-            margin: 0 auto;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #000080);
+            border-radius: 2px;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+            margin-top: 5rem;
         }
 
         .feature-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,128,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b35, #000080, #138808);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
 
         .feature-icon {
-            background-color: #dbeafe;
-            color: var(--primary);
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 1.8rem;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            background: linear-gradient(135deg, #000080, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: bounce 2s infinite;
         }
 
         .feature-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #000080;
+            font-weight: 600;
         }
 
         .feature-card p {
-            color: var(--gray);
+            color: #666;
+            line-height: 1.7;
+            font-size: 1.1rem;
         }
 
-        /* How It Works */
-        .how-it-works {
-            background-color: var(--light);
-        }
-
-        .steps {
-            display: flex;
-            justify-content: space-between;
+        /* Booking System */
+        .booking-system {
+            padding: 100px 0;
+            background: white;
             position: relative;
+        }
+
+        .booking-container {
             max-width: 900px;
             margin: 0 auto;
+            background: linear-gradient(135deg, #f8faff, #ffffff);
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,128,0.1);
         }
 
-        .steps::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background-color: var(--primary);
-            z-index: 1;
+        .form-step {
+            display: none;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
         }
 
         .step {
-            text-align: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
             position: relative;
-            z-index: 2;
-            flex: 1;
         }
 
-        .step-number {
-            background-color: var(--primary);
+        .step.active {
+            background: #000080;
             color: white;
-            width: 80px;
-            height: 80px;
+            transform: scale(1.2);
+        }
+
+        .step.completed {
+            background: #138808;
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 2px;
+            background: #ddd;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #000080;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #000080;
+            outline: none;
+            box-shadow: 0 0 20px rgba(0,0,128,0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        .btn-prev {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-next {
+            background: #000080;
+            color: white;
+        }
+
+        /* Token Display */
+        .token-display {
+            background: linear-gradient(135deg, #000080, #1a237e);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .token-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        .token-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .token-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        /* Queue Status */
+        .queue-status {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #e8f2ff, #f8faff);
+        }
+
+        .status-board {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,128,0.1);
+        }
+
+        .status-header {
+            background: linear-gradient(135deg, #000080, #1a237e);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .status-content {
+            padding: 3rem;
+        }
+
+        .current-serving {
+            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+            border: 2px solid #138808;
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .current-serving::before {
+            content: '🟢';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            animation: blink 1s infinite;
+        }
+
+        .current-serving h3 {
+            color: #138808;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .serving-token {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #000080;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: bounce 2s infinite;
+        }
+
+        .search-section {
+            background: #f8faff;
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 2px solid rgba(0,0,128,0.1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        #tokenStatus {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .status-waiting {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #ffc107;
+        }
+
+        .status-ready {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            border-left: 5px solid #17a2b8;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-left: 5px solid #28a745;
+        }
+
+        /* Services Grid */
+        .services {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f8faff, #ffffff);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0,0,128,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,0,128,0.05) 0%, transparent 70%);
+            transition: all 0.6s ease;
+            transform: scale(0);
+        }
+
+        .service-card:hover::before {
+            transform: scale(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #000080, #ff6b35);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0 auto 1rem;
-            border: 5px solid var(--light);
-        }
-
-        .step h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .step p {
-            color: var(--gray);
-            padding: 0 1rem;
-        }
-
-        /* Demo Section */
-        .demo {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            text-align: center;
-        }
-
-        .demo-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .demo h2 {
+            margin: 0 auto 2rem;
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .demo p {
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .demo-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-top: 2rem;
-            color: var(--dark);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .token-machine {
-            background-color: #e2e8f0;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .token-screen {
-            background-color: #1e293b;
-            color: #10b981;
-            padding: 1.5rem;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .token-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .queue-status {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .queue-item {
-            background-color: #f1f5f9;
-            padding: 1rem;
-            border-radius: 5px;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .queue-item.active {
-            background-color: var(--primary);
             color: white;
+            box-shadow: 0 10px 30px rgba(0,0,128,0.3);
+            transition: all 0.4s ease;
         }
 
-        /* Applications Section */
-        .applications-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .application-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .application-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .app-icon {
-            height: 120px;
-            background-color: #dbeafe;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--primary);
-        }
-
-        .app-content {
-            padding: 1.5rem;
-        }
-
-        .app-content h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .app-content p {
-            color: var(--gray);
-            font-size: 0.9rem;
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(10deg);
         }
 
         /* Footer */
         footer {
-            background-color: var(--dark);
+            background: linear-gradient(135deg, #000080, #1a237e);
             color: white;
-            padding: 3rem 0 1rem;
+            padding: 4rem 0 2rem;
+            position: relative;
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 3rem;
             margin-bottom: 2rem;
         }
 
-        .footer-column h3 {
+        .footer-section h3 {
             margin-bottom: 1.5rem;
-            font-size: 1.2rem;
+            color: #ff6b35;
+            font-size: 1.3rem;
+            font-weight: 600;
         }
 
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: #cbd5e1;
+        .footer-section a {
+            color: #ccc;
             text-decoration: none;
-            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+            padding-left: 0;
         }
 
-        .footer-links a:hover {
+        .footer-section a:hover {
             color: white;
+            padding-left: 10px;
+            transform: translateX(5px);
         }
 
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            color: white;
-            font-size: 1.2rem;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--secondary);
-        }
-
-        .copyright {
-            text-align: center;
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 2rem;
-            border-top: 1px solid #334155;
-            color: #94a3b8;
-            font-size: 0.9rem;
+            text-align: center;
+            color: #ccc;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #17a2b8, #3498db);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.1rem; }
+            .nav-links { display: none; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .features-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .search-form { flex-direction: column; }
+            .search-input { min-width: 100%; }
+            .section-title { font-size: 2rem; }
+            .booking-container { padding: 2rem 1.5rem; }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu { display: flex; }
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #000080;
                 flex-direction: column;
-                gap: 1rem;
+                padding: 1rem 0;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
             }
-
-            nav ul {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .steps {
-                flex-direction: column;
-                gap: 2rem;
-            }
-
-            .steps::before {
-                display: none;
-            }
-
-            .step-number {
-                margin-bottom: 1rem;
-            }
-
-            .token-buttons {
-                flex-direction: column;
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+    <!-- Government Header -->
+    <div class="gov-header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-ticket-alt"></i>
-                    <span>TokenSystem</span>
+            <div class="gov-info">
+                <div class="emblem">
+                    <div class="emblem-icon">🇮🇳</div>
+                    <div class="gov-title">
+                        <div style="font-size: 1.4rem; font-weight: 700;">Government of India</div>
+                        <div style="font-size: 1rem; opacity: 0.8;">Ministry of Health & Family Welfare</div>
+                    </div>
                 </div>
-                <nav>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#applications">Applications</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </nav>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
+                <div class="time-display">
+                    <div style="font-size: 0.9rem;">Digital India Initiative</div>
+                    <div id="currentTime" style="font-size: 1.1rem; font-weight: bold;">12:00 PM IST</div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                <span>🏥</span> Digital Healthcare Portal
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">🏠 Home</a></li>
+                <li><a href="#services">⚕️ Services</a></li>
+                <li><a href="#booking">📅 Book Appointment</a></li>
+                <li><a href="#queue">📊 Queue Status</a></li>
+                <li><a href="#contact">📞 Contact</a></li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
+    <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Revolutionizing Queue Management with Digital Tokens</h1>
-                <p>The Online Token System is a fully digital solution that makes service access efficient, secure, and user-friendly across hospitals, banks, and government offices.</p>
-                <a href="#how-it-works" class="btn">How It Works</a>
-                <a href="#demo" class="btn btn-outline">Live Demo</a>
+                <h1>🏥 Advanced Digital Healthcare System</h1>
+                <p>Experience next-generation healthcare with our integrated digital platform. Seamless appointment booking, secure DigiLocker integration, real-time queue management, and instant prescription services - all in one revolutionary system designed for modern India.</p>
+                <div class="cta-buttons">
+                    <a href="#booking" class="btn btn-primary" onclick="scrollToSection('booking')">
+                        <span>📅</span> Book Appointment Now
+                    </a>
+                    <a href="#queue" class="btn btn-secondary" onclick="scrollToSection('queue')">
+                        <span>📊</span> Check Queue Status
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="section" id="features">
+    <section id="features" class="features">
         <div class="container">
-            <div class="section-title">
-                <h2>Key Features</h2>
-                <p>Our system offers a comprehensive set of features designed to optimize service delivery and enhance user experience.</p>
-            </div>
+            <h2 class="section-title">🚀 Revolutionary Features</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Online Booking</h3>
-                    <p>Book appointments and receive digital tokens from anywhere using our mobile-friendly platform.</p>
+                    <span class="feature-icon">📱</span>
+                    <h3>Smart Online Booking</h3>
+                    <p>Book appointments instantly with our AI-powered system. Select doctors, choose time slots, and receive unique digital tokens. Multi-step verification ensures accuracy and prevents duplicates.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Secure Integration</h3>
-                    <p>Integration with Digilocker ensures secure access to verified data with advanced encryption.</p>
+                    <span class="feature-icon">🔐</span>
+                    <h3>DigiLocker Integration</h3>
+                    <p>Seamlessly integrated with DigiLocker for secure access to verified patient documents. Government-grade encryption protects your medical data while ensuring instant verification.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-print"></i>
-                    </div>
-                    <h3>Vending Machine Interface</h3>
-                    <p>Print prescriptions or documents instantly using token numbers at self-service kiosks.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Real-time Queue Tracking</h3>
-                    <p>Monitor your position in the queue remotely and receive notifications before your turn.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-md"></i>
-                    </div>
-                    <h3>Doctor Selection</h3>
-                    <p>Choose your preferred healthcare provider or service professional during booking.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </div>
-                    <h3>Multi-sector Application</h3>
-                    <p>Flexible framework applicable to healthcare, banking, government services, and more.</p>
+                    <span class="feature-icon">🖨️</span>
+                    <h3>Automated Prescription System</h3>
+                    <p>Smart kiosks dispense prescriptions using your digital token. Reduces human error, eliminates waiting, and provides instant medication information with dosage instructions.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section class="section how-it-works" id="how-it-works">
+    <!-- Services Section -->
+    <section id="services" class="services">
         <div class="container">
-            <div class="section-title">
-                <h2>How It Works</h2>
-                <p>Simple, efficient process from booking to service delivery</p>
-            </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Book Online</h3>
-                    <p>Select service, provider, and time slot through our platform or mobile app.</p>
+            <h2 class="section-title">🏥 Healthcare Services</h2>
+            <div class="services-grid">
+                <div class="service-card" onclick="selectService('general')">
+                    <div class="service-icon">👨‍⚕️</div>
+                    <h3>General Medicine</h3>
+                    <p>Comprehensive health checkups and consultations with experienced physicians</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Receive Token</h3>
-                    <p>Get a unique digital token with estimated service time and queue position.</p>
+                <div class="service-card" onclick="selectService('cardiology')">
+                    <div class="service-icon">❤️</div>
+                    <h3>Cardiology</h3>
+                    <p>Advanced cardiac care with state-of-the-art diagnostic equipment</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Track Progress</h3>
-                    <p>Monitor your token status in real-time and receive alerts before your turn.</p>
+                <div class="service-card" onclick="selectService('orthopedics')">
+                    <div class="service-icon">🦴</div>
+                    <h3>Orthopedics</h3>
+                    <p>Bone and joint specialists with modern treatment facilities</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Get Service</h3>
-                    <p>Present your token at the counter or kiosk for quick, efficient service.</p>
+                <div class="service-card" onclick="selectService('pediatrics')">
+                    <div class="service-icon">👶</div>
+                    <h3>Pediatrics</h3>
+                    <p>Specialized child healthcare with child-friendly environment</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section class="section demo" id="demo">
+    <!-- Booking System -->
+    <section id="booking" class="booking-system">
         <div class="container">
-            <div class="demo-content">
-                <h2>Experience Our Token System</h2>
-                <p>Try our interactive demo to see how the Online Token System works in practice.</p>
-                
-                <div class="demo-container">
-                    <div class="token-machine">
-                        <div class="token-screen" id="tokenScreen">
-                            Welcome! Select a service
+            <h2 class="section-title">📅 Book Your Appointment</h2>
+            <div class="booking-container">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step" id="step2">2</div>
+                    <div class="step" id="step3">3</div>
+                    <div class="step" id="step4">4</div>
+                </div>
+
+                <form id="appointmentForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" id="step-1">
+                        <h3 style="color: #000080; margin-bottom: 2rem; text-align: center;">👤 Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patientName">Full Name *</label>
+                                <input type="text" id="patientName" name="patientName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientId">Aadhaar Number *</label>
+                                <input type="text" id="patientId" name="patientId" required placeholder="XXXX-XXXX-XXXX" maxlength="14">
+                            </div>
                         </div>
-                        <div class="token-buttons">
-                            <button class="btn" onclick="generateToken('Doctor Consultation')">Doctor Consultation</button>
-                            <button class="btn" onclick="generateToken('Prescription Pickup')">Prescription Pickup</button>
-                            <button class="btn" onclick="generateToken('Lab Report')">Lab Report</button>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Mobile Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="+91 XXXXX XXXXX" maxlength="10">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="your.email@example.com">
+                            </div>
                         </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age">Age *</label>
+                                <input type="number" id="age" name="age" required min="1" max="120" placeholder="Enter age">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender *</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-prev" disabled>Previous</button>
+                            <button type="button" class="btn btn-next" onclick="nextStep()">Next Step</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Medical Information -->
+                    <div class="form-step" id="step-2">
+                        <h3 style="color: #000080; margin-bottom: 2rem; text-align: center;">⚕️ Medical Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="department">Department *</label>
+                                <select id="department" name="department" required onchange="loadDoctors()">
+                                    <option value="">Select Department</option>
+                                    <option value="general">General Medicine</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="gynecology">Gynecology</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="ophthalmology">Ophthalmology</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="doctor">Preferred Doctor</label>
+                                <select id="doctor" name="doctor">
+                                    <option value="">Any Available Doctor</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reason">Reason for Visit *</label>
+                            <textarea id="reason" name="reason" rows="4" required placeholder="Please describe your medical concern in detail"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="previousVisit">Previous Visit to This Hospital?</label>
+                            <select id="previousVisit" name="previousVisit">
+                                <option value="no">No, First Time</option>
+                                <option value="yes">Yes, I have visited before</option>
+                            </select>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                            <button type="button" class="btn btn-next" onclick="nextStep()">Next Step</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Appointment Scheduling -->
+                    <div class="form-step" id="step-3">
+                        <h3 style="color: #000080; margin-bottom: 2rem; text-align: center;">📅 Schedule Appointment</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Preferred Date *</label>
+                                <input type="date" id="date" name="date" required onchange="loadTimeSlots()">
+                            </div>
+                            <div class="form-group">
+                                <label for="time">Available Time Slots *</label>
+                                <select id="time" name="time" required>
+                                    <option value="">Select Date First</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priority">Priority Level</label>
+                            <select id="priority" name="priority">
+                                <option value="normal">Normal</option>
+                                <option value="urgent">Urgent (Medical Emergency)</option>
+                                <option value="followup">Follow-up Visit</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="insurance">Insurance Information</label>
+                            <select id="insurance" name="insurance">
+                                <option value="none">No Insurance</option>
+                                <option value="cghs">CGHS</option>
+                                <option value="esic">ESIC</option>
+                                <option value="ayushman">Ayushman Bharat</option>
+                                <option value="private">Private Insurance</option>
+                            </select>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                            <button type="button" class="btn btn-next" onclick="nextStep()">Next Step</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirmation -->
+                    <div class="form-step" id="step-4">
+                        <h3 style="color: #000080; margin-bottom: 2rem; text-align: center;">✅ Confirm Appointment</h3>
+                        <div id="appointmentSummary" style="background: #f8faff; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; border-left: 5px solid #000080;">
+                            <h4 style="color: #000080; margin-bottom: 1rem;">Appointment Summary</h4>
+                            <div id="summaryContent">
+                                <!-- Summary will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="termsAgreed" required style="margin-right: 10px;">
+                                I agree to the <a href="#" style="color: #000080;">Terms & Conditions</a> and <a href="#" style="color: #000080;">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="smsConsent" style="margin-right: 10px;">
+                                Send appointment reminders via SMS
+                            </label>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span id="submitText">Confirm Appointment</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Token Display -->
+                <div class="token-display" id="tokenDisplay">
+                    <div class="token-content">
+                        <h2>🎉 Appointment Confirmed!</h2>
+                        <p>Your Digital Token Number:</p>
+                        <div class="token-number" id="tokenNumber">A-001</div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
+                            <p><strong>📅 Date:</strong> <span id="confirmDate"></span></p>
+                            <p><strong>⏰ Time:</strong> <span id="confirmTime"></span></p>
+                            <p><strong>👨‍⚕️ Doctor:</strong> <span id="confirmDoctor"></span></p>
+                            <p><strong>🏥 Department:</strong> <span id="confirmDepartment"></span></p>
+                        </div>
+                        <p>✅ Please arrive 15 minutes before your appointment</p>
+                        <p>📱 Save this token number for future reference</p>
+                        <p>📧 Confirmation email sent to your registered email</p>
+                        <button class="btn btn-secondary" onclick="downloadToken()" style="margin-top: 1rem;">
+                            📄 Download Token
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Queue Status -->
+    <section id="queue" class="queue-status">
+        <div class="container">
+            <h2 class="section-title">📊 Real-Time Queue Status</h2>
+            <div class="status-board">
+                <div class="status-header">
+                    🔴 Live Queue Dashboard
+                    <div style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.9;">Updated every 30 seconds</div>
+                </div>
+                <div class="status-content">
+                    <div class="current-serving">
+                        <h3>Currently Serving</h3>
+                        <div class="serving-token" id="currentServingToken">A-012</div>
+                        <p style="color: #666; margin-top: 1rem;"><strong>Department:</strong> General Medicine</p>
+                        <p style="color: #666;"><strong>Doctor:</strong> Dr. Rajesh Sharma</p>
                     </div>
                     
-                    <div class="queue-status">
-                        <div class="queue-item">Token #101<br>Waiting</div>
-                        <div class="queue-item active">Token #102<br>Currently Serving</div>
-                        <div class="queue-item">Token #103<br>Estimated 5 min</div>
-                        <div class="queue-item">Token #104<br>Estimated 10 min</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                    <div class="search-section">
+                        <h4 style="color: #000080; margin-bottom: 1.5rem;">🔍 Check Your Token Status</h4>
+                        <div class="search-form">
+                            <div class="form-group search-input">
+                                <label for="searchToken">Enter Token Number</label>
+                                <input type="text" id="searchToken" placeholder="e.g., A-001, C-005, P-010" style="text-transform: uppercase;">
+                            </div>
+                            <button class="btn btn-primary" onclick="checkTokenStatus()" style="height: fit-content; margin-top: auto;">
+                                <span id="searchBtnText">🔍 Check Status</span>
+                            </button>
+                        </div>
 
-    <!-- Applications Section -->
-    <section class="section" id="applications">
-        <div class="container">
-            <div class="section-title">
-                <h2>Multi-Sector Applications</h2>
-                <p>Our flexible system can be adapted to various service environments</p>
-            </div>
-            <div class="applications-grid">
-                <div class="application-card">
-                    <div class="app-icon">
-                        <i class="fas fa-hospital"></i>
+                        <div id="tokenStatus">
+                            <!-- Status will be populated by JavaScript -->
+                        </div>
                     </div>
-                    <div class="app-content">
-                        <h3>Healthcare</h3>
-                        <p>Reduce waiting times, manage patient flow, and streamline prescription services in hospitals and clinics.</p>
-                    </div>
-                </div>
-                <div class="application-card">
-                    <div class="app-icon">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3>Banking</h3>
-                        <p>Optimize customer service in banks with digital queuing and appointment systems.</p>
-                    </div>
-                </div>
-                <div class="application-card">
-                    <div class="app-icon">
-                        <i class="fas fa-landmark"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3>Government Offices</h3>
-                        <p>Improve efficiency in public service centers with organized digital queue management.</p>
-                    </div>
-                </div>
-                <div class="application-card">
-                    <div class="app-icon">
-                        <i class="fas fa-store"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3>Retail & Services</h3>
-                        <p>Enhance customer experience in retail stores, service centers, and other businesses.</p>
+
+                    <!-- Queue Statistics -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 3rem;">
+                        <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h4 style="color: #1976d2;">📊 Total Tokens Today</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #0d47a1;" id="totalTokens">147</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #e8f5e8, #c8e6c9); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h4 style="color: #388e3c;">✅ Completed</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #1b5e20;" id="completedTokens">98</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #fff3e0, #ffcc02); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h4 style="color: #f57c00;">⏳ Waiting</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #e65100;" id="waitingTokens">49</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h4 style="color: #c2185b;">⏱️ Avg Wait Time</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #880e4f;" id="avgWaitTime">25 min</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -705,84 +1267,850 @@
     <footer id="contact">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>TokenSystem</h3>
-                    <p>Revolutionizing service delivery through digital token-based queue management systems.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
+                <div class="footer-section">
+                    <h3>📍 Contact Information</h3>
+                    <p style="margin-bottom: 1rem;">Central Government Hospital<br>
+                    Rajpath, New Delhi - 110001</p>
+                    <p>📞 Emergency: 102 | Toll Free: 1800-11-4477</p>
+                    <p>✉️ info@digitalhealthcare.gov.in</p>
+                    <p>🌐 www.digitalhealthcare.gov.in</p>
                 </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#applications">Applications</a></li>
-                    </ul>
+                <div class="footer-section">
+                    <h3>🔗 Quick Services</h3>
+                    <a href="#booking">📅 Book Appointment</a>
+                    <a href="#queue">📊 Queue Status</a>
+                    <a href="#">📋 Medical Records</a>
+                    <a href="#">📄 Download Reports</a>
+                    <a href="#">🚨 Emergency Services</a>
+                    <a href="#">💊 Prescription Refill</a>
                 </div>
-                <div class="footer-column">
-                    <h3>Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Healthcare Solutions</a></li>
-                        <li><a href="#">Banking Systems</a></li>
-                        <li><a href="#">Government Services</a></li>
-                        <li><a href="#">Custom Implementation</a></li>
-                    </ul>
+                <div class="footer-section">
+                    <h3>🏛️ Government Links</h3>
+                    <a href="#">Ministry of Health & Family Welfare</a>
+                    <a href="#">DigiLocker</a>
+                    <a href="#">Ayushman Bharat</a>
+                    <a href="#">CGHS Portal</a>
+                    <a href="#">National Health Portal</a>
+                    <a href="#">e-Sanjeevani</a>
                 </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Business District, City</li>
-                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
-                        <li><i class="fas fa-envelope"></i> info@tokensystem.com</li>
-                    </ul>
+                <div class="footer-section">
+                    <h3>🛠️ Support & Help</h3>
+                    <a href="#">❓ Help & FAQ</a>
+                    <a href="#">📖 User Manual</a>
+                    <a href="#">🔧 Technical Support</a>
+                    <a href="#">📝 Feedback Form</a>
+                    <a href="#">🔒 Privacy Policy</a>
+                    <a href="#">⚖️ Terms of Service</a>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2023 Online Token System. All rights reserved.</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Government of India | Digital Healthcare Portal | Ministry of Health & Family Welfare</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">🇮🇳 Proudly Made in India | Digital India Initiative</p>
             </div>
         </div>
     </footer>
 
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
     <script>
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav ul').classList.toggle('show');
+        // Global variables
+        let currentStep = 1;
+        let appointmentData = {};
+        let currentServingNumber = 12;
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').min = today;
+            
+            // Initialize queue simulation
+            simulateQueue();
+            setInterval(simulateQueue, 30000); // Update every 30 seconds
+            
+            // Add input formatting
+            addInputFormatting();
+            
+            // Initialize mobile menu
+            initializeMobileMenu();
         });
 
-        // Token generation demo
-        function generateToken(service) {
-            const tokenNumber = Math.floor(Math.random() * 900) + 100;
-            const screen = document.getElementById('tokenScreen');
-            screen.innerHTML = `Service: ${service}<br>Token: #${tokenNumber}<br>Queue Position: ${Math.floor(Math.random() * 10) + 1}`;
-            
-            // Simulate queue update
+        // Clock functionality
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const clockElement = document.getElementById('currentTime');
+            if (clockElement) {
+                clockElement.textContent = timeString + ' IST';
+            }
+        }
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function initializeMobileMenu() {
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('navLinks').classList.remove('active');
+                });
+            });
+        }
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+
+        // Service selection
+        function selectService(serviceType) {
+            scrollToSection('booking');
             setTimeout(() => {
-                alert(`Your token #${tokenNumber} is now active. Estimated wait time: ${Math.floor(Math.random() * 15) + 5} minutes.`);
+                const departmentSelect = document.getElementById('department');
+                departmentSelect.value = serviceType;
+                loadDoctors();
+                showNotification('Service selected successfully! Complete the booking form.', 'info');
             }, 1000);
         }
 
-        // Smooth scrolling for navigation links
+        // Step navigation
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < 4) {
+                    // Hide current step
+                    document.getElementById(`step-${currentStep}`).classList.remove('active');
+                    document.getElementById(`step${currentStep}`).classList.remove('active');
+                    document.getElementById(`step${currentStep}`).classList.add('completed');
+                    
+                    currentStep++;
+                    
+                    // Show next step
+                    document.getElementById(`step-${currentStep}`).classList.add('active');
+                    document.getElementById(`step${currentStep}`).classList.add('active');
+                    
+                    // Update form data
+                    if (currentStep === 4) {
+                        generateAppointmentSummary();
+                    }
+                    
+                    // Smooth scroll to form
+                    document.querySelector('.booking-container').scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                // Hide current step
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                
+                currentStep--;
+                
+                // Show previous step
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                document.getElementById(`step${currentStep}`).classList.remove('completed');
+            }
+        }
+
+        // Form validation
+        function validateCurrentStep() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const requiredFields = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    field.focus();
+                    field.style.borderColor = '#dc3545';
+                    showNotification(`Please fill in the required field: ${field.previousElementSibling.textContent}`, 'error');
+                    return false;
+                } else {
+                    field.style.borderColor = '#e0e0e0';
+                }
+            }
+            
+            // Additional validation for specific steps
+            if (currentStep === 1) {
+                if (!validateAadhaar(document.getElementById('patientId').value)) {
+                    showNotification('Please enter a valid Aadhaar number', 'error');
+                    return false;
+                }
+                if (!validatePhone(document.getElementById('phone').value)) {
+                    showNotification('Please enter a valid 10-digit mobile number', 'error');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function validateAadhaar(aadhaar) {
+            const cleanAadhaar = aadhaar.replace(/[-\s]/g, '');
+            return cleanAadhaar.length === 12 && /^\d+$/.test(cleanAadhaar);
+        }
+
+        function validatePhone(phone) {
+            const cleanPhone = phone.replace(/[-\s+]/g, '');
+            return cleanPhone.length === 10 && /^\d+$/.test(cleanPhone);
+        }
+
+        // Input formatting
+        function addInputFormatting() {
+            // Aadhaar formatting
+            document.getElementById('patientId').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{4})(?=\d)/g, '$1-');
+                if (value.length > 14) value = value.substring(0, 14);
+                e.target.value = value;
+            });
+
+            // Phone formatting
+            document.getElementById('phone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                e.target.value = value;
+            });
+
+            // Search token formatting
+            document.getElementById('searchToken').addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+
+        // Load doctors based on department
+        function loadDoctors() {
+            const department = document.getElementById('department').value;
+            const doctorSelect = document.getElementById('doctor');
+            
+            const doctors = {
+                'general': [
+                    'Dr. Rajesh Sharma - Senior Physician',
+                    'Dr. Priya Patel - Internal Medicine Specialist',
+                    'Dr. Amit Kumar - General Practitioner',
+                    'Dr. Sunita Singh - Family Medicine Expert'
+                ],
+                'cardiology': [
+                    'Dr. Vikram Reddy - Cardiologist',
+                    'Dr. Meera Joshi - Heart Specialist',
+                    'Dr. Arjun Gupta - Interventional Cardiologist',
+                    'Dr. Kavita Agarwal - Cardiac Surgeon'
+                ],
+                'orthopedics': [
+                    'Dr. Ravi Verma - Orthopedic Surgeon',
+                    'Dr. Anita Sharma - Joint Specialist',
+                    'Dr. Deepak Malhotra - Spine Specialist',
+                    'Dr. Pooja Tiwari - Sports Medicine'
+                ],
+                'gynecology': [
+                    'Dr. Sushma Rao - Gynecologist',
+                    'Dr. Nisha Kapoor - Obstetrician',
+                    'Dr. Rekha Jain - Women\'s Health Specialist',
+                    'Dr. Swati Bhatt - Fertility Expert'
+                ],
+                'pediatrics': [
+                    'Dr. Rohit Nair - Pediatrician',
+                    'Dr. Seema Saxena - Child Specialist',
+                    'Dr. Arjun Malhotra - Newborn Care',
+                    'Dr. Priyanka Joshi - Child Development'
+                ],
+                'dermatology': [
+                    'Dr. Rahul Tiwari - Dermatologist',
+                    'Dr. Swati Agarwal - Skin Specialist',
+                    'Dr. Vikash Gupta - Cosmetic Dermatology',
+                    'Dr. Neha Sharma - Hair & Skin Expert'
+                ],
+                'neurology': [
+                    'Dr. Suresh Kumar - Neurologist',
+                    'Dr. Madhavi Patel - Brain Specialist',
+                    'Dr. Rajesh Verma - Stroke Specialist',
+                    'Dr. Anjali Singh - Epilepsy Expert'
+                ],
+                'ophthalmology': [
+                    'Dr. Mohan Reddy - Eye Specialist',
+                    'Dr. Shruti Jain - Retina Expert',
+                    'Dr. Praveen Kumar - Cataract Surgeon',
+                    'Dr. Deepika Sharma - Pediatric Ophthalmologist'
+                ]
+            };
+            
+            doctorSelect.innerHTML = '<option value="">Any Available Doctor</option>';
+            
+            if (department && doctors[department]) {
+                doctors[department].forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.split(' - ')[0];
+                    option.textContent = doctor;
+                    doctorSelect.appendChild(option);
+                });
+                
+                showNotification('Doctors loaded for selected department', 'success');
+            }
+        }
+
+        // Load time slots based on date
+        function loadTimeSlots() {
+            const selectedDate = document.getElementById('date').value;
+            const timeSelect = document.getElementById('time');
+            
+            if (!selectedDate) {
+                timeSelect.innerHTML = '<option value="">Select Date First</option>';
+                return;
+            }
+            
+            const today = new Date();
+            const selected = new Date(selectedDate);
+            const isToday = selected.toDateString() === today.toDateString();
+            const currentHour = today.getHours();
+            
+            const timeSlots = [
+                '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
+            ];
+            
+            timeSelect.innerHTML = '<option value="">Select Time Slot</option>';
+            
+            timeSlots.forEach(slot => {
+                const [hours, minutes] = slot.split(':');
+                const slotHour = parseInt(hours);
+                
+                // Skip past time slots if today
+                if (isToday && slotHour <= currentHour) {
+                    return;
+                }
+                
+                const option = document.createElement('option');
+                option.value = slot;
+                option.textContent = formatTime(slot);
+                timeSelect.appendChild(option);
+            });
+            
+            showNotification('Available time slots loaded', 'success');
+        }
+
+        function formatTime(time) {
+            const [hours, minutes] = time.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Generate appointment summary
+        function generateAppointmentSummary() {
+            const formData = new FormData(document.getElementById('appointmentForm'));
+            appointmentData = Object.fromEntries(formData);
+            
+            const summaryContent = document.getElementById('summaryContent');
+            const department = appointmentData.department;
+            const departmentNames = {
+                'general': 'General Medicine',
+                'cardiology': 'Cardiology',
+                'orthopedics': 'Orthopedics',
+                'gynecology': 'Gynecology',
+                'pediatrics': 'Pediatrics',
+                'dermatology': 'Dermatology',
+                'neurology': 'Neurology',
+                'ophthalmology': 'Ophthalmology'
+            };
+            
+            summaryContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <strong>👤 Patient:</strong> ${appointmentData.patientName}<br>
+                        <strong>📞 Phone:</strong> ${appointmentData.phone}<br>
+                        <strong>📧 Email:</strong> ${appointmentData.email || 'Not provided'}<br>
+                        <strong>👤 Age/Gender:</strong> ${appointmentData.age} years, ${appointmentData.gender}
+                    </div>
+                    <div>
+                        <strong>🏥 Department:</strong> ${departmentNames[department] || department}<br>
+                        <strong>👨‍⚕️ Doctor:</strong> ${appointmentData.doctor || 'Any Available'}<br>
+                        <strong>📅 Date:</strong> ${formatDate(appointmentData.date)}<br>
+                        <strong>⏰ Time:</strong> ${formatTime(appointmentData.time)}
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <strong>📝 Reason for Visit:</strong><br>
+                    <em>${appointmentData.reason}</em>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Form submission
+        document.getElementById('appointmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!document.getElementById('termsAgreed').checked) {
+                showNotification('Please agree to the Terms & Conditions', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<span class="loading"></span>Booking Appointment...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                bookAppointment();
+                submitBtn.disabled = false;
+                submitText.textContent = 'Confirm Appointment';
+            }, 2000);
+        });
+
+        function bookAppointment() {
+            // Generate token number
+            const departments = {
+                'general': 'A', 'cardiology': 'C', 'orthopedics': 'O',
+                'gynecology': 'G', 'pediatrics': 'P', 'dermatology': 'D',
+                'neurology': 'N', 'ophthalmology': 'E'
+            };
+            
+            const dept = appointmentData.department;
+            const prefix = departments[dept] || 'A';
+            const number = Math.floor(Math.random() * 100) + 1;
+            const tokenNumber = `${prefix}-${number.toString().padStart(3, '0')}`;
+            
+            // Store appointment data
+            const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+            const newAppointment = {
+                ...appointmentData,
+                tokenNumber,
+                status: 'confirmed',
+                bookingTime: new Date().toISOString(),
+                estimatedWaitTime: calculateWaitTime(prefix, number)
+            };
+            appointments.push(newAppointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            
+            // Update token display
+            document.getElementById('tokenNumber').textContent = tokenNumber;
+            document.getElementById('confirmDate').textContent = formatDate(appointmentData.date);
+            document.getElementById('confirmTime').textContent = formatTime(appointmentData.time);
+            document.getElementById('confirmDoctor').textContent = appointmentData.doctor || 'Any Available Doctor';
+            document.getElementById('confirmDepartment').textContent = getDepartmentName(appointmentData.department);
+            
+            // Hide form and show token
+            document.getElementById('appointmentForm').style.display = 'none';
+            document.getElementById('tokenDisplay').style.display = 'block';
+            
+            // Scroll to token display
+            document.getElementById('tokenDisplay').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            showNotification(`Appointment booked successfully! Your token is ${tokenNumber}`, 'success');
+        }
+
+        function calculateWaitTime(prefix, number) {
+            const baseWaitTime = {
+                'A': 15, 'C': 25, 'O': 20, 'G': 18, 'P': 12, 'D': 15, 'N': 30, 'E': 20
+            };
+            return (baseWaitTime[prefix] || 15) + (number * 2);
+        }
+
+        function getDepartmentName(dept) {
+            const names = {
+                'general': 'General Medicine', 'cardiology': 'Cardiology',
+                'orthopedics': 'Orthopedics', 'gynecology': 'Gynecology',
+                'pediatrics': 'Pediatrics', 'dermatology': 'Dermatology',
+                'neurology': 'Neurology', 'ophthalmology': 'Ophthalmology'
+            };
+            return names[dept] || dept;
+        }
+
+        // Download token functionality
+        function downloadToken() {
+            const tokenData = {
+                tokenNumber: document.getElementById('tokenNumber').textContent,
+                patientName: appointmentData.patientName,
+                date: appointmentData.date,
+                time: appointmentData.time,
+                department: getDepartmentName(appointmentData.department),
+                doctor: appointmentData.doctor || 'Any Available Doctor'
+            };
+            
+            const content = `
+DIGITAL HEALTHCARE PORTAL
+Government of India
+========================
+
+APPOINTMENT CONFIRMATION
+Token Number: ${tokenData.tokenNumber}
+Patient Name: ${tokenData.patientName}
+Date: ${formatDate(tokenData.date)}
+Time: ${formatTime(tokenData.time)}
+Department: ${tokenData.department}
+Doctor: ${tokenData.doctor}
+
+Please arrive 15 minutes before your appointment.
+Keep this token for reference.
+
+Contact: 1800-11-4477
+Website: www.digitalhealthcare.gov.in
+            `;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `appointment-token-${tokenData.tokenNumber}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Token downloaded successfully!', 'success');
+        }
+
+        // Queue management
+        function simulateQueue() {
+            // Update current serving token
+            currentServingNumber++;
+            const departments = ['A', 'C', 'O', 'G', 'P', 'D', 'N', 'E'];
+            const randomDept = departments[Math.floor(Math.random() * departments.length)];
+            const newToken = `${randomDept}-${currentServingNumber.toString().padStart(3, '0')}`;
+            
+            document.getElementById('currentServingToken').textContent = newToken;
+            
+            // Update statistics
+            const totalTokens = document.getElementById('totalTokens');
+            const completedTokens = document.getElementById('completedTokens');
+            const waitingTokens = document.getElementById('waitingTokens');
+            const avgWaitTime = document.getElementById('avgWaitTime');
+            
+            if (totalTokens) {
+                const current = parseInt(totalTokens.textContent);
+                totalTokens.textContent = current + Math.floor(Math.random() * 3);
+                completedTokens.textContent = currentServingNumber - 5;
+                waitingTokens.textContent = Math.max(0, current - currentServingNumber + 5);
+                
+                const avgTime = Math.floor(Math.random() * 20) + 15;
+                avgWaitTime.textContent = `${avgTime} min`;
+            }
+        }
+
+        // Token status checking
+        async function checkTokenStatus() {
+            const searchToken = document.getElementById('searchToken').value.trim().toUpperCase();
+            const searchBtn = document.querySelector('#queue .btn-primary');
+            const searchBtnText = document.getElementById('searchBtnText');
+            const statusDiv = document.getElementById('tokenStatus');
+            
+            if (!searchToken) {
+                showNotification('Please enter a token number', 'error');
+                return;
+            }
+            
+            if (!/^[A-Z]-\d{3}$/.test(searchToken)) {
+                showNotification('Please enter a valid token format (e.g., A-001)', 'error');
+                return;
+            }
+            
+            // Show loading state
+            searchBtn.disabled = true;
+            searchBtnText.innerHTML = '<span class="loading"></span>Checking...';
+            
+            setTimeout(() => {
+                const tokenNumber = parseInt(searchToken.split('-')[1]);
+                const currentNumber = currentServingNumber;
+                const status = getTokenStatus(tokenNumber, currentNumber);
+                
+                displayTokenStatus(searchToken, status);
+                
+                searchBtn.disabled = false;
+                searchBtnText.textContent = '🔍 Check Status';
+                
+                statusDiv.style.display = 'block';
+                statusDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+
+        function getTokenStatus(tokenNum, currentNum) {
+            if (tokenNum < currentNum - 10) {
+                return {
+                    type: 'completed',
+                    title: '✅ Appointment Completed',
+                    message: 'Your appointment has been completed.',
+                    detail: 'Please visit the reception if you need any assistance.',
+                    waitTime: '0 minutes'
+                };
+            } else if (tokenNum <= currentNum) {
+                return {
+                    type: 'ready',
+                    title: '🔔 Please Report to Doctor',
+                    message: 'Your token is currently being called.',
+                    detail: 'Please proceed to the designated consultation room immediately.',
+                    waitTime: '0 minutes'
+                };
+            } else if (tokenNum <= currentNum + 3) {
+                return {
+                    type: 'ready',
+                    title: '⚡ You\'re Next!',
+                    message: `You are ${tokenNum - currentNum} position(s) away.`,
+                    detail: 'Please be ready and stay near the consultation area.',
+                    waitTime: `${(tokenNum - currentNum) * 8} minutes`
+                };
+            } else {
+                const estimatedWait = (tokenNum - currentNum) * 12;
+                return {
+                    type: 'waiting',
+                    title: '⏳ Please Wait',
+                    message: `You are ${tokenNum - currentNum} position(s) away in the queue.`,
+                    detail: 'We recommend staying within the hospital premises.',
+                    waitTime: `${estimatedWait} minutes`
+                };
+            }
+        }
+
+        function displayTokenStatus(token, status) {
+            const statusDiv = document.getElementById('tokenStatus');
+            
+            statusDiv.className = `status-${status.type}`;
+            statusDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h4 style="color: #000080; margin-bottom: 0.5rem;">${status.title}</h4>
+                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Token: ${token}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.9rem; color: #666;">Estimated Wait</div>
+                        <div style="font-size: 1.3rem; font-weight: bold; color: #000080;">${status.waitTime}</div>
+                    </div>
+                </div>
+                <p style="margin-bottom: 0.5rem;">${status.message}</p>
+                <p style="font-size: 0.9rem; color: #666;">${status.detail}</p>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; color: #666;">
+                    <p>💡 <strong>Tip:</strong> You can check your status anytime using this token number.</p>
+                </div>
+            `;
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notificationMessage');
+            
+            notificationMessage.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Smooth scrolling for all navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
                 }
             });
         });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'linear-gradient(135deg, #000080, #1a237e)';
+                header.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, #000080, #1a237e)';
+                header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.querySelectorAll('.feature-card, .service-card, .section-title').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.3);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation keyframes
+        if (!document.querySelector('#ripple-style')) {
+            const style = document.createElement('style');
+            style.id = 'ripple-style';
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Error handling for form submission
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e.error);
+            showNotification('An error occurred. Please refresh the page and try again.', 'error');
+        });
+
+        // Reset form function
+        function resetBookingForm() {
+            document.getElementById('appointmentForm').reset();
+            currentStep = 1;
+            
+            // Reset all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step-${i}`).classList.remove('active');
+                document.getElementById(`step${i}`).classList.remove('active', 'completed');
+            }
+            
+            // Activate first step
+            document.getElementById('step-1').classList.add('active');
+            document.getElementById('step1').classList.add('active');
+            
+            // Hide token display and show form
+            document.getElementById('tokenDisplay').style.display = 'none';
+            document.getElementById('appointmentForm').style.display = 'block';
+            
+            showNotification('Form reset successfully', 'info');
+        }
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close mobile menu if open
+                document.getElementById('navLinks').classList.remove('active');
+            }
+            
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type === 'text') {
+                const currentStepElement = document.getElementById(`step-${currentStep}`);
+                if (currentStepElement.contains(e.target)) {
+                    e.preventDefault();
+                    const nextButton = currentStepElement.querySelector('.btn-next');
+                    if (nextButton && !nextButton.disabled) {
+                        nextButton.click();
+                    }
+                }
+            }
+        });
+
+        // Auto-save form data
+        let autoSaveTimeout;
+        document.getElementById('appointmentForm').addEventListener('input', function() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                localStorage.setItem('appointmentDraft', JSON.stringify(data));
+            }, 1000);
+        });
+
+        // Load saved form data
+        function loadSavedFormData() {
+            const savedData = localStorage.getItem('appointmentDraft');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    Object.keys(data).forEach(key => {
+                        const field = document.querySelector(`[name="${key}"]`);
+                        if (field && data[key]) {
+                            field.value = data[key];
+                        }
+                    });
+                } catch (e) {
+                    console.warn('Could not load saved form data');
+                }
+            }
+        }
+
+        // Initialize saved data loading
+        setTimeout(loadSavedFormData, 1000);
     </script>
 </body>
 </html>
